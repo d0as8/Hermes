@@ -58,15 +58,20 @@ class Price {
 
 class Order {
 
+    // todo hide
     public:
 
     int mType;
+    datetime mExpiration;
+    int mMagic;
     double mLot;
     Price * pPrice;
 
     public:
 
     Order() {
+        this.mExpiration = 0;
+        this.mMagic = 143432;
         this.mLot = 0;
         this.pPrice = new Price(0, 0, 0, 0);
     }
@@ -96,6 +101,14 @@ class Order {
         return (OP_BUY == mType ? pPrice.GetBuyTP() : pPrice.GetSellTP());
     }
 
+    datetime GetExpiration() {
+        return (mExpiration);
+    }
+
+    int GetMagic() {
+        return (mMagic);
+    }
+
     ~Order() {
         delete(pPrice);
     }
@@ -118,7 +131,9 @@ class OrderManager: public Base {
             order.GetSL(),
             order.GetTP(),
             "",
-            0, 0, clrBlue);
+            order.GetMagic(),
+            order.GetExpiration(),
+            CLR_NONE);
 
         if (0 != GetLastError()) {
             PrintError(__FUNCTION__, GetLastError());

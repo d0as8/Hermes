@@ -32,11 +32,11 @@ class Application: public Base {
         indicators[ArraySize(indicators) - 1] = i;
     }
 
-    virtual Operation isActive() {
+    virtual Operation GetOperation() {
         Operation op = NOP;
 
         for (int i = 0; i < ArraySize(indicators); i++) {
-            Operation o = indicators[i].isActive();
+            Operation o = indicators[i].GetOperation();
 
             if (NEXT == o)
                 continue;
@@ -57,7 +57,7 @@ class Application: public Base {
     }
 
     virtual void Process() {
-        Operation op = isActive();
+        Operation op = GetOperation();
 
         if (NOP == op)
             return;

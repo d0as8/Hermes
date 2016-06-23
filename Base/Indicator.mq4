@@ -20,7 +20,7 @@ class Indicator: public Base {
 
     public:
 
-    virtual Operation isActive() {
+    virtual Operation GetOperation() {
         return (NOP);
     }
 
