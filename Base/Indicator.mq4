@@ -18,10 +18,41 @@ enum Operation {
 
 class Indicator: public Base {
 
+    protected:
+
+    string NAME;
+
     public:
 
+    Indicator() {
+        this.NAME = this.GetClass(__FUNCTION__);
+    }
+
+    static string Decode(Operation o) {
+        switch (o) {
+            case NOP:
+                return ("No operation");
+            case NEXT:
+                return ("Next indicator");
+            case BUY:
+                return ("Suppose BUY operation");
+            case SELL:
+                return ("Suppose SELL operation");
+            default:
+                return ("");
+        }
+    }
+
+    virtual void Print(Operation o) {
+        Print(this.NAME, " -> ", Indicator::Decode(o));
+    }
+
     virtual Operation GetOperation() {
-        return (NOP);
+        Operation o = NEXT;
+
+        this.Print(o);
+
+        return (o);
     }
 
 };
