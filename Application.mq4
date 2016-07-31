@@ -11,6 +11,7 @@
 #include "Base/Indicator.mq4"
 #include "Base/MomeyManager.mq4"
 #include "Base/OrderManager.mq4"
+#include "Base/Drawer.mq4"
 
 class Application: public Base {
 
@@ -50,7 +51,6 @@ class Application: public Base {
                 if (op != o)
                     return (NOP);
             }
-
         }
 
         return (op);
@@ -63,11 +63,11 @@ class Application: public Base {
             return;
 
         Order * order = momeyManager.GetOrder();
-
-        order.mType = BUY == op ? OP_BUY : OP_SELL;
+        order.SetType( BUY == op ? OP_BUY : OP_SELL );
 
         orderManager.OpenOrder(order);
 
+        Drawer::DrawLine(BUY == op ? clrBlue: clrRed);
     }
 
 };

@@ -58,27 +58,71 @@ class Price {
 
 class Order {
 
-    // todo hide
-    public:
+    private:
 
     int mType;
     datetime mExpiration;
     int mMagic;
     double mLot;
     Price * pPrice;
+    bool mEnableSL;
+    bool mEnableTP;
+    int mColor;
+    string mComment;
+    int mSlippage;
 
     public:
 
-    Order() {
-        this.mExpiration = 0;
-        this.mMagic = 143432;
-        this.mLot = 0;
-        this.pPrice = new Price(0, 0, 0, 0);
+    Order(bool enableSL = true, bool enableTP = true) {
+        mExpiration = 0;
+        mMagic = 143432;
+        mLot = 0;
+        pPrice = new Price(0, 0, 0, 0);
+        mEnableSL = enableSL;
+        mEnableTP = enableTP;
+        mColor = CLR_NONE;
+        mSlippage = 0;
     }
 
     void Update(double lot, double stopLoss, double takeProfit, double ask, double bid) {
-        this.mLot = lot;
-        this.pPrice.Update(stopLoss, takeProfit, ask, bid);
+        mLot = lot;
+        pPrice.Update(stopLoss, takeProfit, ask, bid);
+    }
+
+    void SetSlippage(int slippage) {
+        mSlippage = slippage;
+    }
+
+    int GetSlippage() {
+        return (mSlippage);
+    }
+
+    void SetComment(string comment) {
+        mComment = comment;
+    }
+
+    string GetComment() {
+        return (mComment);
+    }
+
+    void SetColor(int clr) {
+        mColor = clr;
+    }
+
+    int GetColor() {
+        return (mColor);
+    }
+
+    bool EnableSL(bool enable) {
+        return (mEnableSL = enable);
+    }
+
+    bool EnableTP(bool enable) {
+        return (mEnableTP = enable);
+    }
+
+    void SetType(int type) {
+        mType = type;
     }
 
     int GetType() {
@@ -94,15 +138,33 @@ class Order {
     }
 
     double GetSL() {
-        return (OP_BUY == mType ? pPrice.GetBuySL() : pPrice.GetSellSL());
+        return ( mEnableSL
+            ? OP_BUY == mType
+                ? pPrice.GetBuySL()
+                : pPrice.GetSellSL()
+            : 0
+        );
     }
 
     double GetTP() {
-        return (OP_BUY == mType ? pPrice.GetBuyTP() : pPrice.GetSellTP());
+        return ( mEnableTP
+            ? OP_BUY == mType
+                ? pPrice.GetBuyTP()
+                : pPrice.GetSellTP()
+            : 0
+        );
+    }
+
+    void SetExpiration(datetime expiration) {
+        mExpiration = expiration;
     }
 
     datetime GetExpiration() {
         return (mExpiration);
+    }
+
+    void SetMagic(int magic) {
+        mMagic = magic;
     }
 
     int GetMagic() {
@@ -127,13 +189,13 @@ class OrderManager: public Base {
             order.GetType(),
             order.GetLot(),
             order.GetPrice(),
-            0,
+            order.GetSlippage(),
             order.GetSL(),
             order.GetTP(),
-            "",
+            order.GetComment(),
             order.GetMagic(),
             order.GetExpiration(),
-            CLR_NONE);
+            order.GetColor());
 
         if (0 != GetLastError()) {
             PrintError(__FUNCTION__, GetLastError());

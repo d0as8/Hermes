@@ -13,7 +13,9 @@ enum Operation {
     NOP = 0,
     NEXT = 1,
     BUY = 2,
-    SELL = 4
+    SELL = 4,
+    CLOSE_BUY = 5,
+    CLOSE_SELL = 6
 };
 
 class Indicator: public Base {
@@ -38,6 +40,10 @@ class Indicator: public Base {
                 return ("Suppose BUY operation");
             case SELL:
                 return ("Suppose SELL operation");
+            case CLOSE_BUY:
+                return ("Suppose close BUY orders");
+            case CLOSE_SELL:
+                return ("Suppose close SELL orders");
             default:
                 return ("");
         }
